@@ -1,4 +1,4 @@
-package ni.edu.uam.nicadatasolutions;
+package ni.edu.uam.practicahilos;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

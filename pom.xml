@@ -7,7 +7,7 @@
     <groupId>ni.edu.uam</groupId>
     <artifactId>NicaDataSolutions</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>NicaDataSolutions</name>
+    <name>PracticaHilosJavaFX</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -60,7 +60,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>ni.edu.uam.nicadatasolutions/ni.edu.uam.nicadatasolutions.HelloApplication
+                            <mainClass>ni.edu.uam.practicahilos/ni.edu.uam.practicahilos.HelloApplication
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
