@@ -74,3 +74,24 @@ texto "Procesando..." ni siquiera llega a mostrarse (la escena solo se repinta
 cuando el manejador termina), y la ventana no se puede mover ni cerrar. La
 solución es mover el trabajo a otro hilo (`Thread` + `Runnable`) y volver al
 hilo de JavaFX solo para actualizar los controles con `Platform.runLater()`.
+
+## Reto final: procesos concurrentes
+
+La aplicación se amplió a un **Monitor de procesos** de NicaData Solutions con
+dos hilos independientes, cada uno con su barra de progreso y sus botones:
+
+| Proceso | Registros | Pausa por registro | Duración aprox. |
+|---------|-----------|--------------------|-----------------|
+| Clientes | 100 | 100 ms | 10 s |
+| Productos | 50 | 150 ms | 7,5 s |
+
+- Cada proceso crea su propio `Thread` a partir de un `Runnable` (`Hilo-Clientes`, `Hilo-Productos`).
+- La interfaz se actualiza únicamente con `Platform.runLater()`.
+- Cada hilo se detiene individualmente con su botón **Detener** (`interrupt()`).
+- No se puede iniciar un proceso dos veces: se comprueba `isAlive()` y el botón Iniciar se deshabilita.
+- Al cerrar la ventana se interrumpen ambos hilos.
+- La clase interna `Proceso` agrupa los controles y el hilo de cada proceso para reutilizar la misma lógica.
+
+## Evidencia
+
+Capturas del funcionamiento en la carpeta `capturas/` (pendiente de agregar).
