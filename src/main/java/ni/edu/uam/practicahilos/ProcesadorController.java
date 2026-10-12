@@ -8,72 +8,158 @@ import javafx.scene.control.ProgressBar;
 
 public class ProcesadorController {
 
+    // ----- Proceso de clientes -----
     @FXML
-    private Label lblEstado;
+    private Label lblEstadoClientes;
+    @FXML
+    private Label lblPorcentajeClientes;
+    @FXML
+    private ProgressBar barraClientes;
+    @FXML
+    private Button btnIniciarClientes;
+    @FXML
+    private Button btnDetenerClientes;
+    @FXML
+    private Button btnReiniciarClientes;
+
+    // ----- Proceso de productos -----
+    @FXML
+    private Label lblEstadoProductos;
+    @FXML
+    private Label lblPorcentajeProductos;
+    @FXML
+    private ProgressBar barraProductos;
+    @FXML
+    private Button btnIniciarProductos;
+    @FXML
+    private Button btnDetenerProductos;
+    @FXML
+    private Button btnReiniciarProductos;
+
+    /**
+     * Agrupa los controles y el hilo de un proceso, de modo que
+     * cada proceso sea independiente del otro.
+     */
+    private static class Proceso {
+        final String nombre;
+        final int totalRegistros;
+        final int milisPorRegistro;
+
+        final Label lblEstado;
+        final Label lblPorcentaje;
+        final ProgressBar barra;
+        final Button btnIniciar;
+        final Button btnDetener;
+        final Button btnReiniciar;
+
+        Thread hilo;
+
+        Proceso(String nombre, int totalRegistros, int milisPorRegistro,
+                Label lblEstado, Label lblPorcentaje, ProgressBar barra,
+                Button btnIniciar, Button btnDetener, Button btnReiniciar) {
+            this.nombre = nombre;
+            this.totalRegistros = totalRegistros;
+            this.milisPorRegistro = milisPorRegistro;
+            this.lblEstado = lblEstado;
+            this.lblPorcentaje = lblPorcentaje;
+            this.barra = barra;
+            this.btnIniciar = btnIniciar;
+            this.btnDetener = btnDetener;
+            this.btnReiniciar = btnReiniciar;
+        }
+
+        boolean enEjecucion() {
+            return hilo != null && hilo.isAlive();
+        }
+    }
+
+    private Proceso clientes;
+    private Proceso productos;
 
     @FXML
-    private Label lblPorcentaje;
+    private void initialize() {
+        // Tiempos distintos: 100 x 100 ms = ~10 s, 50 x 150 ms = ~7.5 s
+        clientes = new Proceso("Clientes", 100, 100,
+                lblEstadoClientes, lblPorcentajeClientes, barraClientes,
+                btnIniciarClientes, btnDetenerClientes, btnReiniciarClientes);
+
+        productos = new Proceso("Productos", 50, 150,
+                lblEstadoProductos, lblPorcentajeProductos, barraProductos,
+                btnIniciarProductos, btnDetenerProductos, btnReiniciarProductos);
+    }
+
+    // ----- Manejadores de eventos -----
 
     @FXML
-    private ProgressBar barraProgreso;
+    private void iniciarClientes() {
+        iniciar(clientes);
+    }
 
     @FXML
-    private Button btnIniciar;
+    private void detenerClientes() {
+        detener(clientes);
+    }
 
     @FXML
-    private Button btnDetener;
+    private void reiniciarClientes() {
+        reiniciar(clientes);
+    }
 
     @FXML
-    private Button btnReiniciar;
-
-    private Thread hiloProceso;
+    private void iniciarProductos() {
+        iniciar(productos);
+    }
 
     @FXML
-    private void iniciarProceso() {
+    private void detenerProductos() {
+        detener(productos);
+    }
 
-        if (hiloProceso != null &&
-                hiloProceso.isAlive()) {
+    @FXML
+    private void reiniciarProductos() {
+        reiniciar(productos);
+    }
+
+    // ----- Lógica común a ambos procesos -----
+
+    private void iniciar(Proceso p) {
+
+        // Evita iniciar el mismo proceso dos veces simultáneamente
+        if (p.enEjecucion()) {
             return;
         }
 
-        barraProgreso.setProgress(0);
-        lblPorcentaje.setText("0%");
-        lblEstado.setText("Procesando registros...");
+        p.barra.setProgress(0);
+        p.lblPorcentaje.setText("0%");
+        p.lblEstado.setText("Procesando " + p.nombre.toLowerCase() + "...");
 
-        btnIniciar.setDisable(true);
-        btnDetener.setDisable(false);
-        btnReiniciar.setDisable(true);
+        p.btnIniciar.setDisable(true);
+        p.btnDetener.setDisable(false);
+        p.btnReiniciar.setDisable(true);
 
         Runnable tarea = () -> {
 
             try {
-                for (int i = 1; i <= 100; i++) {
+                for (int i = 1; i <= p.totalRegistros; i++) {
 
-                    if (Thread.currentThread()
-                            .isInterrupted()) {
+                    if (Thread.currentThread().isInterrupted()) {
                         throw new InterruptedException();
                     }
 
-                    Thread.sleep(100);
+                    Thread.sleep(p.milisPorRegistro);
 
-                    final int avance = i;
+                    final double fraccion = (double) i / p.totalRegistros;
 
                     Platform.runLater(() -> {
-                        barraProgreso.setProgress(
-                            avance / 100.0
-                        );
-
-                        lblPorcentaje.setText(
-                            avance + "%"
-                        );
+                        p.barra.setProgress(fraccion);
+                        p.lblPorcentaje.setText(
+                                (int) Math.round(fraccion * 100) + "%");
                     });
                 }
 
                 Platform.runLater(() -> {
-                    lblEstado.setText(
-                        "Proceso finalizado"
-                    );
-                    habilitarBotones();
+                    p.lblEstado.setText("Proceso finalizado");
+                    habilitarBotones(p);
                 });
 
             } catch (InterruptedException e) {
@@ -81,64 +167,54 @@ public class ProcesadorController {
                 Thread.currentThread().interrupt();
 
                 Platform.runLater(() -> {
-                    lblEstado.setText(
-                        "Proceso detenido"
-                    );
-                    habilitarBotones();
+                    p.lblEstado.setText("Proceso detenido");
+                    habilitarBotones(p);
                 });
             }
         };
 
-        hiloProceso = new Thread(tarea);
-
-        hiloProceso.setName("Hilo-Procesamiento");
-        hiloProceso.setDaemon(true);
-        hiloProceso.start();
+        p.hilo = new Thread(tarea);
+        p.hilo.setName("Hilo-" + p.nombre);
+        p.hilo.setDaemon(true);
+        p.hilo.start();
     }
 
-    @FXML
-    private void detenerProceso() {
+    private void detener(Proceso p) {
 
-        if (hiloProceso != null &&
-                hiloProceso.isAlive()) {
+        if (p.enEjecucion()) {
 
-            btnDetener.setDisable(true);
+            p.btnDetener.setDisable(true);
+            p.lblEstado.setText("Solicitando detención...");
 
-            lblEstado.setText(
-                "Solicitando detención..."
-            );
-
-            hiloProceso.interrupt();
+            p.hilo.interrupt();
         }
     }
 
-    @FXML
-    private void reiniciarProceso() {
+    private void reiniciar(Proceso p) {
 
-        if (hiloProceso != null &&
-                hiloProceso.isAlive()) {
+        if (p.enEjecucion()) {
             return;
         }
 
-        barraProgreso.setProgress(0);
-        lblPorcentaje.setText("0%");
-        lblEstado.setText("Esperando inicio");
+        p.barra.setProgress(0);
+        p.lblPorcentaje.setText("0%");
+        p.lblEstado.setText("Esperando inicio");
 
-        habilitarBotones();
+        habilitarBotones(p);
     }
 
-    private void habilitarBotones() {
-        btnIniciar.setDisable(false);
-        btnDetener.setDisable(true);
-        btnReiniciar.setDisable(false);
+    private void habilitarBotones(Proceso p) {
+        p.btnIniciar.setDisable(false);
+        p.btnDetener.setDisable(true);
+        p.btnReiniciar.setDisable(false);
     }
 
     public void detenerAlCerrar() {
 
-        if (hiloProceso != null &&
-                hiloProceso.isAlive()) {
-
-            hiloProceso.interrupt();
+        for (Proceso p : new Proceso[]{clientes, productos}) {
+            if (p != null && p.enEjecucion()) {
+                p.hilo.interrupt();
+            }
         }
     }
 }

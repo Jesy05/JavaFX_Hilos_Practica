@@ -9,38 +9,77 @@
       alignment="CENTER"
       spacing="20"
       prefWidth="520"
-      prefHeight="350">
+      prefHeight="480">
 
     <padding>
         <Insets top="25" right="25"
                 bottom="25" left="25"/>
     </padding>
 
-    <Label text="Procesador de registros"
+    <Label text="Monitor de procesos"
            style="-fx-font-size: 22px;"/>
 
-    <Label fx:id="lblEstado"
-           text="Esperando inicio"/>
+    <!-- Proceso 1: clientes -->
+    <VBox alignment="CENTER" spacing="10">
+        <Label text="Clientes (100 registros)"
+               style="-fx-font-weight: bold;"/>
 
-    <ProgressBar fx:id="barraProgreso"
-                 progress="0"
-                 prefWidth="420"/>
+        <Label fx:id="lblEstadoClientes"
+               text="Esperando inicio"/>
 
-    <Label fx:id="lblPorcentaje"
-           text="0%"/>
+        <ProgressBar fx:id="barraClientes"
+                     progress="0"
+                     prefWidth="420"/>
 
-    <HBox alignment="CENTER" spacing="10">
-        <Button fx:id="btnIniciar"
-                text="Iniciar"
-                onAction="#iniciarProceso"/>
+        <Label fx:id="lblPorcentajeClientes"
+               text="0%"/>
 
-        <Button fx:id="btnDetener"
-                text="Detener"
-                onAction="#detenerProceso"
-                disable="true"/>
+        <HBox alignment="CENTER" spacing="10">
+            <Button fx:id="btnIniciarClientes"
+                    text="Iniciar"
+                    onAction="#iniciarClientes"/>
 
-        <Button fx:id="btnReiniciar"
-                text="Reiniciar"
-                onAction="#reiniciarProceso"/>
-    </HBox>
+            <Button fx:id="btnDetenerClientes"
+                    text="Detener"
+                    onAction="#detenerClientes"
+                    disable="true"/>
+
+            <Button fx:id="btnReiniciarClientes"
+                    text="Reiniciar"
+                    onAction="#reiniciarClientes"/>
+        </HBox>
+    </VBox>
+
+    <Separator/>
+
+    <!-- Proceso 2: productos -->
+    <VBox alignment="CENTER" spacing="10">
+        <Label text="Productos (50 registros)"
+               style="-fx-font-weight: bold;"/>
+
+        <Label fx:id="lblEstadoProductos"
+               text="Esperando inicio"/>
+
+        <ProgressBar fx:id="barraProductos"
+                     progress="0"
+                     prefWidth="420"/>
+
+        <Label fx:id="lblPorcentajeProductos"
+               text="0%"/>
+
+        <HBox alignment="CENTER" spacing="10">
+            <Button fx:id="btnIniciarProductos"
+                    text="Iniciar"
+                    onAction="#iniciarProductos"/>
+
+            <Button fx:id="btnDetenerProductos"
+                    text="Detener"
+                    onAction="#detenerProductos"
+                    disable="true"/>
+
+            <Button fx:id="btnReiniciarProductos"
+                    text="Reiniciar"
+                    onAction="#reiniciarProductos"/>
+        </HBox>
+    </VBox>
 </VBox>
