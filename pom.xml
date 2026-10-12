@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ni.edu.uam</groupId>
-    <artifactId>NicaDataSolutions</artifactId>
+    <artifactId>PracticaHilos</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>PracticaHilosJavaFX</name>
+    <name>PracticaHilos</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
