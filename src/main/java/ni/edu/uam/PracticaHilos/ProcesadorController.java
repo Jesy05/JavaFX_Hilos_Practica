@@ -1,4 +1,4 @@
-package ni.edu.uam.practicahilos;
+package ni.edu.uam.PracticaHilos;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;

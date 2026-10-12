@@ -60,7 +60,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>ni.edu.uam.practicahilos/ni.edu.uam.practicahilos.MainApp
+                            <mainClass>ni.edu.uam.PracticaHilos/ni.edu.uam.PracticaHilos.MainApp
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>

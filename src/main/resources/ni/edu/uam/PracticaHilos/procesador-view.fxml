@@ -5,7 +5,7 @@
 <?import javafx.geometry.Insets?>
 
 <VBox xmlns:fx="http://javafx.com/fxml"
-      fx:controller="ni.edu.uam.practicahilos.ProcesadorController"
+      fx:controller="ni.edu.uam.PracticaHilos.ProcesadorController"
       alignment="CENTER"
       spacing="20"
       prefWidth="520"

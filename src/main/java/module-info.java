@@ -1,8 +1,8 @@
-module ni.edu.uam.practicahilos {
+module ni.edu.uam.PracticaHilos {
     requires javafx.controls;
     requires javafx.fxml;
 
 
-    opens ni.edu.uam.practicahilos to javafx.fxml;
-    exports ni.edu.uam.practicahilos;
+    opens ni.edu.uam.PracticaHilos to javafx.fxml;
+    exports ni.edu.uam.PracticaHilos;
 }
