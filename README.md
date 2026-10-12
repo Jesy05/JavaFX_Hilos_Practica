@@ -43,3 +43,34 @@ Requiere JDK 21. JavaFX se descarga vía Maven.
 - [ ] Detener el proceso antes del 100%.
 - [ ] Reiniciar el progreso a 0%.
 - [ ] Ejecutar nuevamente hasta completar el 100%.
+
+## Análisis del bloqueo de la interfaz (Paso 6)
+
+Método analizado:
+
+```java
+@FXML
+private void procesoBloqueante() {
+    lblEstado.setText("Procesando...");
+    try {
+        Thread.sleep(5000);
+    } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+    }
+    lblEstado.setText("Finalizado");
+}
+```
+
+**¿Por qué no debemos ejecutar procesos prolongados directamente dentro de los eventos de JavaFX?**
+
+Los manejadores de eventos (como `onAction` de un botón) se ejecutan en el
+*JavaFX Application Thread*, el único hilo que dibuja la interfaz y atiende
+los eventos del usuario. Si dentro del manejador se hace una espera o un
+cálculo largo, ese hilo queda ocupado y no puede repintar ni procesar clics,
+así que la ventana se congela ("no responde") durante todo el proceso.
+
+En el ejemplo, `Thread.sleep(5000)` detiene el hilo de JavaFX 5 segundos: el
+texto "Procesando..." ni siquiera llega a mostrarse (la escena solo se repinta
+cuando el manejador termina), y la ventana no se puede mover ni cerrar. La
+solución es mover el trabajo a otro hilo (`Thread` + `Runnable`) y volver al
+hilo de JavaFX solo para actualizar los controles con `Platform.runLater()`.
