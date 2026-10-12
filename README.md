@@ -93,5 +93,7 @@ dos hilos independientes, cada uno con su barra de progreso y sus botones:
 - La clase interna `Proceso` agrupa los controles y el hilo de cada proceso para reutilizar la misma lógica.
 
 ## Evidencia
+<img width="392" height="383" alt="image" src="https://github.com/user-attachments/assets/48a9b73c-6224-4fcf-ba6d-f3265deb88d2" />
 
-Capturas del funcionamiento en la carpeta `capturas/` (pendiente de agregar).
+<img width="392" height="383" alt="image" src="https://github.com/user-attachments/assets/8f12f574-b158-4cfd-8834-678d2dbfce2f" />
+
